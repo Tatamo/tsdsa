@@ -22,13 +22,14 @@
     "typescript": "^2.5.2"
   },
   "jest": {
-	  "transform": {
-		  "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-	  },
-	  "moduleFileExtensions": [
-		  "ts",
-		  "js",
-		  "json"
-	  ]
+	"transform": {
+	  "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+	},
+	"testRegex": "(/__tests__/(?!data/).*|\\.(test|spec))\\.(tsx?|jsx?)$",
+	"moduleFileExtensions": [
+	  "ts",
+	  "js",
+	  "json"
+	]
   }
 }
