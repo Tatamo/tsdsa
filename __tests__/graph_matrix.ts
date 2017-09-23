@@ -26,6 +26,15 @@ const sample_matrix_inf = [
 	[Infinity, Infinity, Infinity, 1, Infinity, 0]
 ];
 
+const sample_list = [
+	[{to: 1, cost: 1}, {to: 4, cost: 1}],
+	[{to: 0, cost: 1}, {to: 2, cost: 1}, {to: 4, cost: 1}],
+	[{to: 1, cost: 1}, {to: 3, cost: 1}],
+	[{to: 2, cost: 1}, {to: 4, cost: 1}, {to: 5, cost: 1}],
+	[{to: 0, cost: 1}, {to: 1, cost: 1}, {to: 3, cost: 1}],
+	[{to: 3, cost: 1}]
+];
+
 const sample_wf_result = [
 	[0, 1, 2, 2, 1, 3],
 	[1, 0, 1, 2, 1, 3],
@@ -47,6 +56,9 @@ describe("Matrix Graph test", () => {
 	});
 	test("graph size", () => {
 		expect(graph.size).toBe(6);
+	});
+	test("convert to list", () => {
+		expect(graph.toList()).toEqual(sample_list);
 	});
 	test("Warshall-Floyd", () => {
 		expect(graph.warshallFloyd()).toEqual(sample_wf_result);

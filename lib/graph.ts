@@ -6,6 +6,7 @@ export interface MatrixGraphConstructorOption {
 
 export class MatrixGraph {
 	private matrix: MatrixGraphArray;
+	private zero_as_no_edge: boolean;
 	private _size: number;
 	get size(): number {
 		return this._size;
@@ -30,6 +31,7 @@ export class MatrixGraph {
 
 	private initArray(input: MatrixGraphArray, option?: MatrixGraphConstructorOption) {
 		const flg_fill_inf: boolean = option !== undefined ? option.zero_as_no_edge : false;
+		this.zero_as_no_edge = flg_fill_inf;
 		this._size = input.length;
 		this.matrix = new Array<Array<number>>(this.size);
 		for (let i = 0; i < this.size; i++) {
@@ -46,6 +48,7 @@ export class MatrixGraph {
 
 	private initString(input: Array<string>, n: number, index_offset?: number, option?: MatrixGraphConstructorOption) {
 		const flg_fill_inf: boolean = option !== undefined ? option.zero_as_no_edge : false;
+		this.zero_as_no_edge = flg_fill_inf;
 		this._size = n;
 		this.matrix = new Array<Array<number>>(this.size);
 		const offset = index_offset !== undefined ? index_offset : 0;
@@ -66,6 +69,20 @@ export class MatrixGraph {
 		const result = new Array<Array<number>>(this.size);
 		for (let i = 0; i < this.size; i++) {
 			result[i] = this.matrix[i].slice();
+		}
+		return result;
+	}
+
+	toList(): ListGraphArray {
+		const result = new Array<Array<ListGraphEdge>>(this.size);
+		for (let i = 0; i < this.size; i++) result[i] = new Array<ListGraphEdge>();
+		for (let from = 0; from < this.size; from++) {
+			for (let to = 0; to < this.size; to++) {
+				if (from == to && this.matrix[from][to] == 0) continue;
+				else if (this.zero_as_no_edge && this.matrix[from][to] == 0) continue;
+				else if (this.matrix[from][to] == Infinity) continue;
+				result[from].push({to, cost: this.matrix[from][to]});
+			}
 		}
 		return result;
 	}
@@ -99,15 +116,17 @@ export type ListGraphArray = Array<Array<ListGraphEdge>>;
 export interface ListGraphConstructorOption {
 	no_input_cost?: boolean;
 	mutual_edge?: boolean;
-	not_include_zero_as_node?: boolean;
 }
 
 export class ListGraph {
 	private list: ListGraphArray;
-	private not_include_zero_as_node: boolean;
 	private _edges: number;
 	get edges(): number {
 		return this._edges;
+	}
+
+	get size(): number {
+		return this.list.length;
 	}
 
 	constructor(input: ListGraphArray, option?: ListGraphConstructorOption);
@@ -118,15 +137,13 @@ export class ListGraph {
 		}
 		// set default option
 		if (option === undefined) {
-			option = {no_input_cost: false, mutual_edge: false, not_include_zero_as_node: false};
+			option = {no_input_cost: false, mutual_edge: false};
 		}
 		else {
 			if (option.no_input_cost === undefined) option.no_input_cost = false;
 			if (option.mutual_edge === undefined) option.mutual_edge = false;
-			if (option.not_include_zero_as_node === undefined) option.not_include_zero_as_node = false;
 		}
 
-		this.not_include_zero_as_node = option.not_include_zero_as_node!;
 
 		if (typeof a == "number") {
 			if (index_offset === undefined) index_offset = 0;
@@ -187,5 +204,22 @@ export class ListGraph {
 		return result;
 	}
 
+	toMatrix(): MatrixGraphArray {
+		const size = this.list.length;
+		const result = new Array<Array<number>>(size);
+		for (let i = 0; i < size; i++) {
+			result[i] = new Array<number>(size);
+			for (let ii = 0; ii < size; ii++) {
+				if (i == ii) result[i][ii] = 0;
+				else result[i][ii] = Infinity;
+			}
+		}
+		for (let from = 0; from < this.list.length; from++) {
+			for (const {to, cost} of this.list[from]) {
+				result[from][to] = cost;
+			}
+		}
+		return result;
+	}
 }
 
