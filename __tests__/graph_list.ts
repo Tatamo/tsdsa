@@ -24,6 +24,11 @@ const sample_matrix = [
 	[Infinity, 90, Infinity, 60, 0]
 ];
 
+const sample_dijkstra_result_from_one = {
+	dist: [80, 0, 20, 70, 90],
+	prev: [1, 1, 1, 2, 1]
+};
+
 describe("List Graph test", () => {
 	const graph = new ListGraph(sample_input, 6, 1, {mutual_edge: true});
 	test("string input", () => {
@@ -40,5 +45,8 @@ describe("List Graph test", () => {
 	});
 	test("convert to matrix", () => {
 		expect(graph.toMatrix()).toEqual(sample_matrix);
+	});
+	test("Dijkstra", () => {
+		expect(graph.dijkstra(1)).toEqual(sample_dijkstra_result_from_one);
 	});
 });

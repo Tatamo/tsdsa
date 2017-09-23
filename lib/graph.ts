@@ -222,5 +222,34 @@ export class ListGraph {
 		}
 		return result;
 	}
-}
 
+	dijkstra(start: number): { dist: Array<number>, prev: Array<number> } {
+		const size = this.list.length;
+		const visited = new Array<boolean>(size);
+		for (let i = 0; i < size; i++) visited[i] = false;
+		const dist = new Array<number>(size); // startからの最短距離
+		for (let i = 0; i < size; i++) dist[i] = Infinity;
+		dist[start] = 0;
+		const prev = new Array<number>(size); // 直前に訪れるノード
+		for (let i = 0; i < size; i++) prev[i] = -1;
+		prev[start] = start;
+		while (true) {
+			let node = -1;
+			for (let i = 0; i < size; i++) {
+				if (!visited[i] && (node == -1 || dist[i] < dist[node])) node = i;
+			}
+			if (node == -1) break;
+			visited[node] = true;
+			for (const {to, cost} of this.list[node]) {
+				if (cost < 0) {
+					throw Error("edge cannot have a cost that is less than 0");
+				}
+				if (dist[node] + cost < dist[to]) {
+					dist[to] = dist[node] + cost;
+					prev[to] = node;
+				}
+			}
+		}
+		return {dist, prev};
+	}
+}
