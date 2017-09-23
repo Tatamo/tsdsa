@@ -2,7 +2,7 @@ export type MatrixGraphArray = Array<Array<number>>;
 
 
 export interface MatrixGraphConstructorOption {
-	zero_as_no_edge: boolean
+	zero_as_no_edge: boolean;
 }
 
 export class MatrixGraph {
@@ -19,10 +19,10 @@ export class MatrixGraph {
 			this.matrix = [];
 		}
 		else if (Array.isArray(input[0])) {
-			this.initArray(<MatrixGraphArray>input, <MatrixGraphConstructorOption>a);
+			this.initArray(input as MatrixGraphArray, a as MatrixGraphConstructorOption);
 		}
 		else if (a !== undefined) {
-			this.initString(<Array<string>>input, <number>a, index_offset, option);
+			this.initString(input as Array<string>, a as number, index_offset, option);
 		}
 		else {
 			throw Error("invalid graph input");
@@ -35,9 +35,9 @@ export class MatrixGraph {
 		this.matrix = new Array<Array<number>>(this.size);
 		for (let i = 0; i < this.size; i++) {
 			this.matrix[i] = input[i].slice();
-			if(flg_fill_inf) {
+			if (flg_fill_inf) {
 				for (let ii = 0; ii < this.size; ii++) {
-					if(i != ii && this.matrix[i][ii] == 0){
+					if (i != ii && this.matrix[i][ii] == 0) {
 						this.matrix[i][ii] = Infinity;
 					}
 				}
@@ -52,9 +52,9 @@ export class MatrixGraph {
 		const offset = index_offset !== undefined ? index_offset : 0;
 		for (let i = 0; i < this.size; i++) {
 			this.matrix[i] = input[i + offset].split(" ").map((x: string): number => +x);
-			if(flg_fill_inf) {
+			if (flg_fill_inf) {
 				for (let ii = 0; ii < this.size; ii++) {
-					if(i != ii && this.matrix[i][ii] == 0){
+					if (i != ii && this.matrix[i][ii] == 0) {
 						this.matrix[i][ii] = Infinity;
 					}
 				}
@@ -64,7 +64,7 @@ export class MatrixGraph {
 
 	getArray(): MatrixGraphArray {
 		// コピーを返す
-		let result = new Array<Array<number>>(this.size);
+		const result = new Array<Array<number>>(this.size);
 		for (let i = 0; i < this.size; i++) {
 			result[i] = this.matrix[i].slice();
 		}
@@ -73,7 +73,7 @@ export class MatrixGraph {
 
 	warshallFloyd(): MatrixGraphArray {
 		// initialize
-		let result: MatrixGraphArray = Array<Array<number>>(this.size);
+		const result: MatrixGraphArray = Array<Array<number>>(this.size);
 		for (let i = 0; i < this.size; i++) {
 			result[i] = this.matrix[i].slice();
 		}

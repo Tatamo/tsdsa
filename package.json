@@ -1,35 +1,41 @@
 {
-  "name": "tsdsa",
-  "version": "0.0.1",
-  "description": "data structures and algorithms for competitive programming",
-  "main": "index.js",
-  "scripts": {
-	"test": "jest",
-	"test-w": "jest --watchAll",
-    "build": "tsc",
-    "watch": "tsc -w"
-  },
-  "repository": {
-	  "type": "git",
-	  "url": "https://github.com/Tatamo/tsdsa"
-  },
-  "author": "tatamo",
-  "license": "BSD-3-Clause",
-  "devDependencies": {
-    "@types/jest": "^20.0.8",
-    "jest": "^21.1.0",
-    "ts-jest": "^21.0.1",
-    "typescript": "^2.5.2"
-  },
-  "jest": {
-	"transform": {
-	  "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+	"name": "tsdsa",
+	"version": "0.0.1",
+	"description": "data structures and algorithms for competitive programming",
+	"main": "index.js",
+	"scripts": {
+		"test": "jest",
+		"test-w": "jest --watchAll",
+		"build": "gulp",
+		"watch": "gulp watch"
 	},
-	"testRegex": "(/__tests__/(?!data/).*|\\.(test|spec))\\.(tsx?|jsx?)$",
-	"moduleFileExtensions": [
-	  "ts",
-	  "js",
-	  "json"
-	]
-  }
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Tatamo/tsdsa"
+	},
+	"author": "Tatamo",
+	"license": "BSD-3-Clause",
+	"devDependencies": {
+		"@types/jest": "^20.0.8",
+		"gulp": "^3.9.1",
+		"gulp-sourcemaps": "^2.6.1",
+		"gulp-tslint": "^8.1.2",
+		"gulp-typescript": "^3.2.2",
+		"jest": "^21.1.0",
+		"merge2": "^1.2.0",
+		"ts-jest": "^21.0.1",
+		"tslint": "^5.7.0",
+		"typescript": "^2.5.2"
+	},
+	"jest": {
+		"transform": {
+			"^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+		},
+		"testRegex": "(/__tests__/(?!data/).*|\\.(test|spec))\\.(tsx?|jsx?)$",
+		"moduleFileExtensions": [
+			"ts",
+			"js",
+			"json"
+		]
+	}
 }
