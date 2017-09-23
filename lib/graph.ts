@@ -1,7 +1,7 @@
 export type MatrixGraphArray = Array<Array<number>>;
 
 export interface MatrixGraphConstructorOption {
-	zero_as_no_edge: boolean;
+	zero_as_no_edge?: boolean;
 }
 
 export class MatrixGraph {
@@ -15,28 +15,34 @@ export class MatrixGraph {
 	constructor(input: MatrixGraphArray, option?: MatrixGraphConstructorOption);
 	constructor(input: Array<string>, n: number, index_offset?: number, option?: MatrixGraphConstructorOption);
 	constructor(input: MatrixGraphArray | Array<string>, a?: number | MatrixGraphConstructorOption, index_offset?: number, option?: MatrixGraphConstructorOption) {
-		if (input.length == 0) {
-			this.matrix = [];
+		// set default option
+		if (!(typeof a == "number")) option = a;
+		if (option === undefined) {
+			option = {zero_as_no_edge: false};
 		}
-		else if (Array.isArray(input[0])) {
-			this.initArray(input as MatrixGraphArray, a as MatrixGraphConstructorOption);
+		else {
+			if (option.zero_as_no_edge === undefined) option.zero_as_no_edge = false;
 		}
-		else if (a !== undefined) {
-			this.initString(input as Array<string>, a as number, index_offset, option);
+		this.zero_as_no_edge = option.zero_as_no_edge!;
+
+		// コンストラクタ引数によって振り分け
+		if (typeof(a) == "number") {
+			this.initString(input as Array<string>, a as number, index_offset !== undefined ? index_offset : 0, option);
+		}
+		else if (input.length == 0 || Array.isArray(input[0])) {
+			this.initArray(input as MatrixGraphArray, option);
 		}
 		else {
 			throw Error("invalid graph input");
 		}
 	}
 
-	private initArray(input: MatrixGraphArray, option?: MatrixGraphConstructorOption) {
-		const flg_fill_inf: boolean = option !== undefined ? option.zero_as_no_edge : false;
-		this.zero_as_no_edge = flg_fill_inf;
+	private initArray(input: MatrixGraphArray, option: MatrixGraphConstructorOption) {
 		this._size = input.length;
 		this.matrix = new Array<Array<number>>(this.size);
 		for (let i = 0; i < this.size; i++) {
 			this.matrix[i] = input[i].slice();
-			if (flg_fill_inf) {
+			if (option.zero_as_no_edge) {
 				for (let ii = 0; ii < this.size; ii++) {
 					if (i != ii && this.matrix[i][ii] == 0) {
 						this.matrix[i][ii] = Infinity;
@@ -46,15 +52,12 @@ export class MatrixGraph {
 		}
 	}
 
-	private initString(input: Array<string>, n: number, index_offset?: number, option?: MatrixGraphConstructorOption) {
-		const flg_fill_inf: boolean = option !== undefined ? option.zero_as_no_edge : false;
-		this.zero_as_no_edge = flg_fill_inf;
+	private initString(input: Array<string>, n: number, index_offset: number, option: MatrixGraphConstructorOption) {
 		this._size = n;
 		this.matrix = new Array<Array<number>>(this.size);
-		const offset = index_offset !== undefined ? index_offset : 0;
 		for (let i = 0; i < this.size; i++) {
-			this.matrix[i] = input[i + offset].split(" ").map((x: string): number => +x);
-			if (flg_fill_inf) {
+			this.matrix[i] = input[i + index_offset].split(" ").map((x: string): number => +x);
+			if (option.zero_as_no_edge) {
 				for (let ii = 0; ii < this.size; ii++) {
 					if (i != ii && this.matrix[i][ii] == 0) {
 						this.matrix[i][ii] = Infinity;
@@ -132,10 +135,8 @@ export class ListGraph {
 	constructor(input: ListGraphArray, option?: ListGraphConstructorOption);
 	constructor(input: Array<string>, edges: number, index_offset?: number, option?: ListGraphConstructorOption);
 	constructor(input: ListGraphArray | Array<string>, a?: ListGraphConstructorOption | number, index_offset?: number, option?: ListGraphConstructorOption) {
-		if (!(typeof a == "number")) {
-			option = a;
-		}
 		// set default option
+		if (!(typeof a == "number")) option = a;
 		if (option === undefined) {
 			option = {no_input_cost: false, mutual_edge: false};
 		}
@@ -144,7 +145,7 @@ export class ListGraph {
 			if (option.mutual_edge === undefined) option.mutual_edge = false;
 		}
 
-
+		// コンストラクタ引数によって振り分け
 		if (typeof a == "number") {
 			if (index_offset === undefined) index_offset = 0;
 			this.initString(input as Array<string>, a, index_offset, option);
