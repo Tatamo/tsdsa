@@ -6,8 +6,7 @@ const sample_input = `6
 0 1 0 1 0 0
 0 0 1 0 1 1
 1 1 0 1 0 0
-0 0 0 1 0 0
-`.split("\n");
+0 0 0 1 0 0`.split("\n");
 
 const sample_matrix = [
 	[0, 1, 0, 0, 1, 0],
