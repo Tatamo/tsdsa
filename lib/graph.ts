@@ -67,7 +67,8 @@ export class MatrixGraph {
 		}
 	}
 
-	getArray(): MatrixGraphArray {
+	getArray(prevent_copy: boolean = false): MatrixGraphArray {
+		if (prevent_copy) return this.matrix;
 		// コピーを返す
 		const result = new Array<Array<number>>(this.size);
 		for (let i = 0; i < this.size; i++) {
@@ -180,7 +181,7 @@ export class ListGraph {
 
 			// 未定義部分は[]で埋める
 			const len = Math.max(from, to) + 1;
-			while(this.list.length<len){
+			while (this.list.length < len) {
 				this.list.push(new Array<ListGraphEdge>());
 			}
 
@@ -191,7 +192,8 @@ export class ListGraph {
 		if (option.mutual_edge) this._edges *= 2;
 	}
 
-	getArray(): ListGraphArray {
+	getArray(prevent_copy: boolean = false): ListGraphArray {
+		if (prevent_copy) return this.list;
 		// コピーを返す
 		const result = new Array<Array<ListGraphEdge>>(this.list.length);
 		for (let i = 0; i < this.list.length; i++) {
