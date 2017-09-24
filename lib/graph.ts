@@ -16,7 +16,7 @@ export class MatrixGraph {
 	constructor(input: Array<string>, n: number, index_offset?: number, option?: MatrixGraphConstructorOption);
 	constructor(input: MatrixGraphArray | Array<string>, a?: number | MatrixGraphConstructorOption, index_offset?: number, option?: MatrixGraphConstructorOption) {
 		// set default option
-		if (!(typeof a == "number")) option = a;
+		if (typeof a !== "number") option = a;
 		if (option === undefined) {
 			option = {zero_as_no_edge: false};
 		}
@@ -26,7 +26,7 @@ export class MatrixGraph {
 		this.zero_as_no_edge = option.zero_as_no_edge!;
 
 		// コンストラクタ引数によって振り分け
-		if (typeof(a) == "number") {
+		if (typeof(a) === "number") {
 			this.initString(input as Array<string>, a as number, index_offset !== undefined ? index_offset : 0, option);
 		}
 		else if (input.length == 0 || Array.isArray(input[0])) {
@@ -136,7 +136,7 @@ export class ListGraph {
 	constructor(input: Array<string>, edges: number, index_offset?: number, option?: ListGraphConstructorOption);
 	constructor(input: ListGraphArray | Array<string>, a?: ListGraphConstructorOption | number, index_offset?: number, option?: ListGraphConstructorOption) {
 		// set default option
-		if (!(typeof a == "number")) option = a;
+		if (typeof a !== "number") option = a;
 		if (option === undefined) {
 			option = {no_input_cost: false, mutual_edge: false};
 		}
@@ -146,7 +146,7 @@ export class ListGraph {
 		}
 
 		// コンストラクタ引数によって振り分け
-		if (typeof a == "number") {
+		if (typeof a === "number") {
 			if (index_offset === undefined) index_offset = 0;
 			this.initString(input as Array<string>, a, index_offset, option);
 		}
@@ -180,10 +180,8 @@ export class ListGraph {
 
 			// 未定義部分は[]で埋める
 			const len = Math.max(from, to) + 1;
-			if (len > this.list.length) {
-				for (let ii = 0; ii < len - (this.list.length - 1); ii++) {
-					this.list.push(new Array<ListGraphEdge>());
-				}
+			while(this.list.length<len){
+				this.list.push(new Array<ListGraphEdge>());
 			}
 
 			// 辺を張る
