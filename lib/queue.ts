@@ -1,4 +1,4 @@
-export class Queue<T> {
+export default class Queue<T> {
 	private _in: Array<T>;
 	private _out: Array<T>;
 
