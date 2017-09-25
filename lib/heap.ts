@@ -3,21 +3,42 @@ interface ChildrenIndex {
 	right?: number;
 }
 
+export type Comparator<T> = (a: T, b: T) => number;
+
 export default class BinaryHeap<T> {
 	private heap: Array<T>;
-	private compare: (a: T, b: T) => number;
+	private compare: Comparator<T>;
 
 	get size(): number {
 		return this.heap.length;
 	}
 
-	constructor() {
+	constructor(compare?: "min" | "max" | Comparator<T>, iterable?: Iterable<T>) {
 		this.heap = new Array<T>();
-		this.compare = (a, b) => {
-			if (a < b) return -1;
-			else if (b < a) return 1;
-			return 0;
-		};
+		// 比較関数を用意する(デフォルトは最小優先)
+		if (compare === undefined || compare === "min") {
+			this.compare = (a, b) => {
+				if (a < b) return -1;
+				else if (b < a) return 1;
+				return 0;
+			};
+		}
+		else if (compare === "max") {
+			this.compare = (a, b) => {
+				if (a > b) return -1;
+				else if (b > a) return 1;
+				return 0;
+			};
+		}
+		else {
+			this.compare = compare;
+		}
+
+		if (iterable !== undefined) {
+			for (const value of iterable) {
+				this.push(value);
+			}
+		}
 	}
 
 	private _isValidIndex(index: number): boolean {
@@ -54,6 +75,10 @@ export default class BinaryHeap<T> {
 			index = parent;
 			parent = this._parent(index);
 		}
+	}
+
+	peek(): T | undefined {
+		return this.heap[0];
 	}
 
 	pop(): T | undefined {
