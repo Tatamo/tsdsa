@@ -1,3 +1,5 @@
+import BinaryHeap from "./heap";
+
 export type MatrixGraphArray = Array<Array<number>>;
 
 export interface MatrixGraphConstructorOption {
@@ -223,20 +225,21 @@ export class ListGraph {
 		return result;
 	}
 
-	dijkstra(start: number): { dist: Array<number>, prev: Array<number> } {
+	dijkstra(start: number): { cost: Array<number>, prev: Array<number> } {
 		const size = this.list.length;
 		const visited = new Array<boolean>(size);
 		for (let i = 0; i < size; i++) visited[i] = false;
-		const dist = new Array<number>(size); // startからの最短距離
-		for (let i = 0; i < size; i++) dist[i] = Infinity;
-		dist[start] = 0;
+		const min_cost = new Array<number>(size); // startからの最短距離
+		min_cost.fill(Infinity);
+		min_cost[start] = 0;
 		const prev = new Array<number>(size); // 直前に訪れるノード
-		for (let i = 0; i < size; i++) prev[i] = -1;
+		prev.fill(-1);
 		prev[start] = start;
+
 		while (true) {
 			let node = -1;
 			for (let i = 0; i < size; i++) {
-				if (!visited[i] && (node == -1 || dist[i] < dist[node])) node = i;
+				if (!visited[i] && (node == -1 || min_cost[i] < min_cost[node])) node = i;
 			}
 			if (node == -1) break;
 			visited[node] = true;
@@ -244,12 +247,45 @@ export class ListGraph {
 				if (cost < 0) {
 					throw Error("edge cannot have a cost that is less than 0");
 				}
-				if (dist[node] + cost < dist[to]) {
-					dist[to] = dist[node] + cost;
+				if (min_cost[node] + cost < min_cost[to]) {
+					min_cost[to] = min_cost[node] + cost;
 					prev[to] = node;
 				}
 			}
 		}
-		return {dist, prev};
+		return {cost: min_cost, prev};
+	}
+
+	// BinaryHeapによる優先度付きキューを用いたダイクストラ
+	dijkstraPQ(start: number): { cost: Array<number>, prev: Array<number> } {
+		const size = this.list.length;
+
+		// 最短距離の小さい順に取り出すヒーブ
+		const heap = new BinaryHeap<{ min_cost: number, node_index: number }>((a, b) => {
+			if (a.min_cost != b.min_cost) return a.min_cost - b.min_cost;
+			return a.node_index - b.node_index;
+		}, [{min_cost: 0, node_index: start}]);
+		const min_cost = new Array<number>(size); // startからの最短距離
+		min_cost.fill(Infinity);
+		min_cost[start] = 0;
+		const prev = new Array<number>(size); // 直前に訪れるノード
+		prev.fill(-1);
+		prev[start] = start;
+
+		while (heap.size > 0) {
+			const top = heap.pop()!;
+			if (min_cost[top.node_index] < top.min_cost) continue; // 取り出した値が最短距離でない場合、無視する
+			for (const {to, cost} of this.list[top.node_index]) {
+				if (cost < 0) {
+					throw Error("edge cannot have a cost that is less than 0");
+				}
+				if (min_cost[top.node_index] + cost < min_cost[to]) {
+					min_cost[to] = min_cost[top.node_index] + cost;
+					prev[to] = top.node_index;
+					heap.push({min_cost: min_cost[to], node_index: to});
+				}
+			}
+		}
+		return {cost: min_cost, prev};
 	}
 }

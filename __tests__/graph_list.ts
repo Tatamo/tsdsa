@@ -25,7 +25,7 @@ const sample_matrix = [
 ];
 
 const sample_dijkstra_result_from_one = {
-	dist: [80, 0, 20, 70, 90],
+	cost: [80, 0, 20, 70, 90],
 	prev: [1, 1, 1, 2, 1]
 };
 
@@ -48,5 +48,8 @@ describe("List Graph test", () => {
 	});
 	test("Dijkstra", () => {
 		expect(graph.dijkstra(1)).toEqual(sample_dijkstra_result_from_one);
+	});
+	test("Dijkstra using BinaryHeap", () => {
+		expect(graph.dijkstraPQ(1)).toEqual(sample_dijkstra_result_from_one);
 	});
 });
