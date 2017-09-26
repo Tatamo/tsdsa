@@ -93,6 +93,38 @@ export class MatrixGraph {
 		return result;
 	}
 
+	dijkstra(start: number): { cost: Array<number>, prev: Array<number> } {
+		const size = this.matrix.length;
+		const visited = new Array<boolean>(size);
+		for (let i = 0; i < size; i++) visited[i] = false;
+		const min_cost = new Array<number>(size); // startからの最短距離
+		min_cost.fill(Infinity);
+		min_cost[start] = 0;
+		const prev = new Array<number>(size); // 直前に訪れるノード
+		prev.fill(-1);
+		prev[start] = start;
+
+		while (true) {
+			let node = -1;
+			for (let i = 0; i < size; i++) {
+				if (!visited[i] && (node == -1 || min_cost[i] < min_cost[node])) node = i;
+			}
+			if (node == -1) break;
+			visited[node] = true;
+			for (let i = 0; i < size; i++) {
+				const cost = this.matrix[node][i];
+				if (cost < 0) {
+					throw Error("edge cannot have a cost that is less than 0");
+				}
+				if (min_cost[node] + cost < min_cost[i]) {
+					min_cost[i] = min_cost[node] + cost;
+					prev[i] = node;
+				}
+			}
+		}
+		return {cost: min_cost, prev};
+	}
+
 	warshallFloyd(): MatrixGraphArray {
 		// initialize
 		const result: MatrixGraphArray = Array<Array<number>>(this.size);

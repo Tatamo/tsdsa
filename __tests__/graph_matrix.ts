@@ -44,6 +44,11 @@ const sample_wf_result = [
 	[3, 3, 2, 1, 2, 0]
 ];
 
+const sample_dijkstra_result_from_one = {
+	cost: [1, 0, 1, 2, 1, 3],
+	prev: [1, 1, 1, 2, 1, 3]
+};
+
 describe("Matrix Graph test", () => {
 	const graph = new MatrixGraph(sample_input, 6, 1, {zero_as_no_edge: true});
 	test("string input", () => {
@@ -59,6 +64,9 @@ describe("Matrix Graph test", () => {
 	});
 	test("convert to list", () => {
 		expect(graph.toList()).toEqual(sample_list);
+	});
+	test("Dijkstra", () => {
+		expect(graph.dijkstra(1)).toEqual(sample_dijkstra_result_from_one);
 	});
 	test("Warshall-Floyd", () => {
 		expect(graph.warshallFloyd()).toEqual(sample_wf_result);
