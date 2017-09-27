@@ -29,6 +29,27 @@ const sample_dijkstra_result_from_one = {
 	prev: [1, 1, 1, 2, 1]
 };
 
+const sample_bf_result_from_one = {
+	has_negative_loop: false,
+	cost: [80, 0, 20, 70, 90],
+	prev: [1, 1, 1, 2, 1]
+};
+
+const sample_list_negative = [
+	[{to: 1, cost: 5}, {to: 2, cost: 4}],
+	[{to: 2, cost: -2}, {to: 3, cost: 1}],
+	[{to: 3, cost: 2}, {to: 4, cost: 1}, {to: 5, cost: 4}],
+	[{to: 1, cost: -1}, {to: 5, cost: 3}],
+	[{to: 5, cost: 4}],
+	[]
+]; // 負閉路を含むグラフ
+
+const sample_negative_bf_result_from_zero = {
+	has_negative_loop: true,
+	cost: [0, null, null, null, null, null],
+	prev: [0, null, null, null, null, null]
+};
+
 describe("List Graph test", () => {
 	const graph = new ListGraph(sample_input, 6, 1, {mutual_edge: true});
 	test("string input", () => {
@@ -51,5 +72,12 @@ describe("List Graph test", () => {
 	});
 	test("Dijkstra using BinaryHeap", () => {
 		expect(graph.dijkstraPQ(1)).toEqual(sample_dijkstra_result_from_one);
+	});
+	test("bellmanFord", () => {
+		expect(graph.bellmanFord(1)).toEqual(sample_bf_result_from_one);
+	});
+	test("bellmanFord when the graph has negative cycle", () => {
+		const graph2 = new ListGraph(sample_list_negative);
+		expect(graph2.bellmanFord(0)).toEqual(sample_negative_bf_result_from_zero);
 	});
 });

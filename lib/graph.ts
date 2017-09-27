@@ -320,4 +320,56 @@ export class ListGraph {
 		}
 		return {cost: min_cost, prev};
 	}
+
+	// O(VE)
+	bellmanFord(start: number): { has_negative_loop: false, cost: Array<number>, prev: Array<number> } | { has_negative_loop: true, cost: Array<number | null>, prev: Array<number | null> } {
+		const size = this.list.length;
+		const min_cost = new Array<number>(size); // startからの最短距離
+		min_cost.fill(Infinity);
+		min_cost[start] = 0;
+		const prev = new Array<number>(size); // 直前に訪れるノード
+		prev.fill(-1);
+		prev[start] = start;
+		const correct = new Array<boolean>(size); // 正しい最短経路が求まっているかどうか
+		correct.fill(true);
+		let loop_count = 0;
+		let flg_contain_negative = false;
+		let flg_update = true;
+		while (flg_update) {
+			flg_update = false;
+			for (let from = 0; from < size; from++) {
+				for (const {to, cost} of this.list[from]) {
+					if (min_cost[from] != Infinity && min_cost[to] > min_cost[from] + cost) {
+						min_cost[to] = min_cost[from] + cost;
+						prev[to] = from;
+						flg_update = true;
+						if (flg_contain_negative) {
+							// V回目以降に最短距離が更新されるなら、負閉路を通っているので正しくない
+							correct[to] = false;
+						}
+					}
+				}
+			}
+			loop_count += 1;
+			if (loop_count == size) {
+				// 頂点の数だけ更新してもループがとまらない -> 負閉路が存在する
+				flg_contain_negative = true;
+			}
+			if (loop_count == size * 2) break; // 頂点の数*2回より多くループする意味はない
+		}
+		if (flg_contain_negative) {
+			// 正しく最短距離が求められない頂点の結果はnullとする
+			const min_cost_with_undefined: Array<number | null> = min_cost;
+			const prev_with_undefined: Array<number | null> = prev;
+			for (let i = 0; i < size; i++) {
+				if (!correct[i]) {
+					min_cost_with_undefined[i] = prev_with_undefined[i] = null;
+				}
+			}
+			return {has_negative_loop: true, cost: min_cost_with_undefined, prev: prev_with_undefined};
+		}
+		else {
+			return {has_negative_loop: false, cost: min_cost, prev};
+		}
+	}
 }
