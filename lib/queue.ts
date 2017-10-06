@@ -7,13 +7,8 @@ export default class Queue<T> {
 	}
 
 	constructor(iterable?: Iterable<T>) {
-		this._in = new Array<T>();
+		this._in = iterable === undefined ? new Array<T>() : [...iterable];
 		this._out = new Array<T>();
-		if (iterable !== undefined) {
-			for (const value of iterable) {
-				this.push(value);
-			}
-		}
 	}
 
 	private _fix() {
