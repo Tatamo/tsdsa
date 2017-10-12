@@ -193,6 +193,7 @@ export class ListGraph {
 		}
 	}
 
+	// TODO: 無向グラフに
 	private initArray(input: ListGraphArray) {
 		this._edges = 0;
 		this.list = new Array<Array<ListGraphEdge>>(input.length);
@@ -371,5 +372,29 @@ export class ListGraph {
 		else {
 			return {has_negative_loop: false, cost: min_cost, prev};
 		}
+	}
+
+	// 2部グラフ判定
+	// TODO: 有向グラフ対応
+	isBigraph(): { result: false } | { result: true, colors: Array<-1 | 1> } {
+		const size = this.list.length;
+		const color = new Array(size + 1).fill(0);
+		const stack = [];
+		for (let i = 0; i < size; i++) {
+			if (color[i] != 0) continue;
+			color[i] = 1;
+			stack.push(i);
+			while (stack.length > 0) {
+				const node: number = stack.pop()!;
+				for (const edge of this.list[node]) {
+					if (color[edge.to] == color[node]) return {result: false};
+					if (color[edge.to] == 0) {
+						color[edge.to] = -color[node];
+						stack.push(edge.to);
+					}
+				}
+			}
+		}
+		return {result: true, colors: color};
 	}
 }
