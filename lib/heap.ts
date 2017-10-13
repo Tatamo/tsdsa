@@ -31,7 +31,7 @@ export default class BinaryHeap<T> {
 			};
 		}
 		else {
-			this.compare = compare;
+			this.compare = compare as Comparator<T>;
 		}
 
 		if (iterable !== undefined) {
