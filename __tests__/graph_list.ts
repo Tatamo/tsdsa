@@ -80,4 +80,7 @@ describe("List Graph test", () => {
 		const graph2 = new ListGraph(sample_list_negative);
 		expect(graph2.bellmanFord(0)).toEqual(sample_negative_bf_result_from_zero);
 	});
+	test("Bigraph", () => {
+		expect(graph.isBigraph().result).toBe(false);
+	});
 });
