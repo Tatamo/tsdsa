@@ -16,8 +16,8 @@ export default class Queue<T> {
 		this._in = new Array<T>();
 	}
 
-	push(value: T): void {
-		this._in.push(value);
+	push(...values: Array<T>): void {
+		this._in.push(...values);
 	}
 
 	shift(): T | undefined {
