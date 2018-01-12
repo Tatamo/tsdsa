@@ -17,4 +17,10 @@ describe("Union-Find", () => {
 		expect(uf.check(3, 0)).toBe(false);
 		expect(uf.check(2, 2)).toBe(true);
 	});
+	test("get group size", () => {
+		expect(uf.size(0)).toBe(3);
+		expect(uf.size(1)).toBe(3);
+		expect(uf.size(2)).toBe(3);
+		expect(uf.size(3)).toBe(1);
+	});
 });

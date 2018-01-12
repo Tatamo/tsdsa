@@ -1,6 +1,7 @@
 export class UnionFind {
 	private _parent: Array<number>;
 	private _rank: Array<number>;
+	private _size: Array<number>;
 	private _length: number;
 	get length(): number {
 		return this._length;
@@ -12,6 +13,7 @@ export class UnionFind {
 			this._parent[i] = i;
 		}
 		this._rank = new Array(length).fill(1);
+		this._size = new Array(length).fill(1);
 	}
 	root(node: number): number {
 		const stack: Array<number> = [node];
@@ -31,6 +33,9 @@ export class UnionFind {
 		}
 		return result;
 	}
+	size(node: number): number {
+		return this._size[this.root(node)];
+	}
 	check(x: number, y: number): boolean {
 		return this.root(x) === this.root(y);
 	}
@@ -43,9 +48,11 @@ export class UnionFind {
 			if (this._rank[x] === this._rank[y]) {
 				this._rank[y] += 1;
 			}
+			this._size[x] += this._size[y];
 		}
 		else {
 			this._parent[x] = this._parent[y];
+			this._size[y] = this._size[x];
 		}
 		return 0;
 	}
