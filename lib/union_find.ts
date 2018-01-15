@@ -40,7 +40,6 @@ export class UnionFind {
 		return this.root(x) === this.root(y);
 	}
 	unite(x: number, y: number) {
-		console.log(this.root(y));
 		x = this.root(x);
 		y = this.root(y);
 		if (this._rank[x] >= this._rank[y]) {
