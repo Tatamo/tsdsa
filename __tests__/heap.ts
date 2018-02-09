@@ -32,8 +32,8 @@ describe("BinaryHeap test", () => {
 	});
 	describe("custom comparator heap test", () => {
 		const heap = new BinaryHeap<number>((a: number, b: number) => {
-			if (a % 2 == 0 && b % 2 != 0) return -1;
-			if (b % 2 == 0 && a % 2 != 0) return 1;
+			if (a % 2 === 0 && b % 2 != 0) return -1;
+			if (b % 2 === 0 && a % 2 != 0) return 1;
 			return a - b;
 		}); // 小さい順、ただし偶数は奇数より常に前
 		test("custom heap push and pop", () => {

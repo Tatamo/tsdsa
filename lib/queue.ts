@@ -21,7 +21,7 @@ export default class Queue<T> {
 	}
 
 	shift(): T | undefined {
-		if (this._out.length == 0) this._fix();
+		if (this._out.length === 0) this._fix();
 		return this._out.pop();
 	}
 

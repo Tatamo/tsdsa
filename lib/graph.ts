@@ -31,7 +31,7 @@ export class MatrixGraph {
 		if (typeof(a) === "number") {
 			this.initString(input as Array<string>, a as number, index_offset !== undefined ? index_offset : 0, option);
 		}
-		else if (input.length == 0 || Array.isArray(input[0])) {
+		else if (input.length === 0 || Array.isArray(input[0])) {
 			this.initArray(input as MatrixGraphArray, option);
 		}
 		else {
@@ -46,7 +46,7 @@ export class MatrixGraph {
 			this.matrix[i] = input[i].slice();
 			if (option.zero_as_no_edge) {
 				for (let ii = 0; ii < this.size; ii++) {
-					if (i != ii && this.matrix[i][ii] == 0) {
+					if (i != ii && this.matrix[i][ii] === 0) {
 						this.matrix[i][ii] = Infinity;
 					}
 				}
@@ -61,7 +61,7 @@ export class MatrixGraph {
 			this.matrix[i] = input[i + index_offset].split(" ").map((x: string): number => +x);
 			if (option.zero_as_no_edge) {
 				for (let ii = 0; ii < this.size; ii++) {
-					if (i != ii && this.matrix[i][ii] == 0) {
+					if (i != ii && this.matrix[i][ii] === 0) {
 						this.matrix[i][ii] = Infinity;
 					}
 				}
@@ -84,9 +84,9 @@ export class MatrixGraph {
 		for (let i = 0; i < this.size; i++) result[i] = new Array<ListGraphEdge>();
 		for (let from = 0; from < this.size; from++) {
 			for (let to = 0; to < this.size; to++) {
-				if (from == to && this.matrix[from][to] == 0) continue;
-				else if (this.zero_as_no_edge && this.matrix[from][to] == 0) continue;
-				else if (this.matrix[from][to] == Infinity) continue;
+				if (from === to && this.matrix[from][to] === 0) continue;
+				else if (this.zero_as_no_edge && this.matrix[from][to] === 0) continue;
+				else if (this.matrix[from][to] === Infinity) continue;
 				result[from].push({to, cost: this.matrix[from][to]});
 			}
 		}
@@ -107,9 +107,9 @@ export class MatrixGraph {
 		while (true) {
 			let node = -1;
 			for (let i = 0; i < size; i++) {
-				if (!visited[i] && (node == -1 || min_cost[i] < min_cost[node])) node = i;
+				if (!visited[i] && (node === -1 || min_cost[i] < min_cost[node])) node = i;
 			}
-			if (node == -1) break;
+			if (node === -1) break;
 			visited[node] = true;
 			for (let i = 0; i < size; i++) {
 				const cost = this.matrix[node][i];
@@ -185,7 +185,7 @@ export class ListGraph {
 			if (index_offset === undefined) index_offset = 0;
 			this.initString(input as Array<string>, a, index_offset, option);
 		}
-		else if (input.length == 0 || Array.isArray(input[0])) {
+		else if (input.length === 0 || Array.isArray(input[0])) {
 			this.initArray(input as ListGraphArray);
 		}
 		else {
@@ -246,7 +246,7 @@ export class ListGraph {
 		for (let i = 0; i < size; i++) {
 			result[i] = new Array<number>(size);
 			for (let ii = 0; ii < size; ii++) {
-				if (i == ii) result[i][ii] = 0;
+				if (i === ii) result[i][ii] = 0;
 				else result[i][ii] = Infinity;
 			}
 		}
@@ -272,9 +272,9 @@ export class ListGraph {
 		while (true) {
 			let node = -1;
 			for (let i = 0; i < size; i++) {
-				if (!visited[i] && (node == -1 || min_cost[i] < min_cost[node])) node = i;
+				if (!visited[i] && (node === -1 || min_cost[i] < min_cost[node])) node = i;
 			}
-			if (node == -1) break;
+			if (node === -1) break;
 			visited[node] = true;
 			for (const {to, cost} of this.list[node]) {
 				if (cost < 0) {
@@ -352,11 +352,11 @@ export class ListGraph {
 				}
 			}
 			loop_count += 1;
-			if (loop_count == size) {
+			if (loop_count === size) {
 				// 頂点の数だけ更新してもループがとまらない -> 負閉路が存在する
 				flg_contain_negative = true;
 			}
-			if (loop_count == size * 2) break; // 頂点の数*2回より多くループする意味はない
+			if (loop_count === size * 2) break; // 頂点の数*2回より多くループする意味はない
 		}
 		if (flg_contain_negative) {
 			// 正しく最短距離が求められない頂点の結果はnullとする
@@ -387,8 +387,8 @@ export class ListGraph {
 			while (stack.length > 0) {
 				const node: number = stack.pop()!;
 				for (const edge of this.list[node]) {
-					if (color[edge.to] == color[node]) return {result: false};
-					if (color[edge.to] == 0) {
+					if (color[edge.to] === color[node]) return {result: false};
+					if (color[edge.to] === 0) {
 						color[edge.to] = -color[node];
 						stack.push(edge.to);
 					}
