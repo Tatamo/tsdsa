@@ -1,4 +1,4 @@
-export class UnionFind {
+export default class UnionFind {
 	private _parent: Array<number>;
 	private _rank: Array<number>;
 	private _size: Array<number>;

@@ -1,4 +1,4 @@
-export const powmod = (n: number, x: number, mod: number = Infinity): number => {
+export default function powmod(n: number, x: number, mod: number = Infinity): number {
 	const rem = (a: number, b: number) => a === Infinity ? Infinity : a % b;
 	if (x <= 0) return 1;
 	if (x % 2 === 0) return powmod(rem(n * n, mod), x / 2, mod);

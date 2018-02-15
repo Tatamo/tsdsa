@@ -1,4 +1,4 @@
-import {UnionFind} from "../lib/union_find";
+import UnionFind from "../lib/union_find";
 
 describe("Union-Find", () => {
 	const uf = new UnionFind(4);
