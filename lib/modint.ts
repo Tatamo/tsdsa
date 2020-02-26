@@ -49,8 +49,6 @@ export default class ModInt {
 	}
 	public inverse(): ModInt {
 		if (ModInt.gcd(this.value, this.mod) !== 1) throw new Error(`${this.value} is not coprime to ${this.mod}`);
-		const a = new ModInt(ModInt.gcdEx(this.value, this.mod)[0], this.mod);
-		if ((a.value * this.value) % this.mod !== 1) throw new Error(`${a} is not inverse of ${this.value}!`);
 		return new ModInt(ModInt.gcdEx(this.value, this.mod)[0], this.mod);
 	}
 	public pow(n: number): ModInt {
