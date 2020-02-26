@@ -106,7 +106,7 @@ export default class ModInt {
 	};
 
 	/**
-	 * get a maximum number z s.t. x%z==0 && x%y==0
+	 * get a maximum number z s.t. x%z==0 && x%z==0
 	 */
 	private static gcd(x: number, y: number): number {
 		if (y === 0) return x;
