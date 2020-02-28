@@ -47,9 +47,17 @@ export default class ModInt {
 			return value.inverse().mul(this);
 		}
 	}
+	/**
+	 * inverse_cache[mod][num]
+	 */
+	private static inverse_cache: Array<Array<ModInt>> = [];
 	public inverse(): ModInt {
+		if (ModInt.inverse_cache[this.mod] !== undefined && ModInt.inverse_cache[this.mod][this.value] !== undefined) return ModInt.inverse_cache[this.mod][this.value];
+		// comment out the following line if you dont need the check (it costs a bit)
 		if (ModInt.gcd(this.value, this.mod) !== 1) throw new Error(`${this.value} is not coprime to ${this.mod}`);
-		return new ModInt(ModInt.gcdEx(this.value, this.mod)[0], this.mod);
+		if (ModInt.inverse_cache[this.mod] === undefined) ModInt.inverse_cache[this.mod] = [];
+		ModInt.inverse_cache[this.mod][this.value] = new ModInt(ModInt.gcdEx(this.value, this.mod)[0], this.mod);
+		return ModInt.inverse_cache[this.mod][this.value];
 	}
 	public pow(n: number): ModInt {
 		const rem = (x: number, y: number): number => x === Infinity ? Infinity : x % y;
@@ -60,7 +68,19 @@ export default class ModInt {
 		};
 		return new ModInt(powMod(this.value, n), this.mod);
 	}
-
+	/**
+	 * factorial_cache[mod][num]
+	 */
+	private static factorial_cache: Array<Array<ModInt>> = [];
+	private static cacheFactorial(max: number, mod: number): Array<ModInt> {
+		if (this.factorial_cache[mod] === undefined) this.factorial_cache[mod] = [new ModInt(1, mod)];
+		if (this.factorial_cache[mod].length <= max) {
+			for (let i = this.factorial_cache[mod].length; i <= max; i++) {
+				this.factorial_cache[mod][i] = this.factorial_cache[mod][i - 1].mul(i);
+			}
+		}
+		return this.factorial_cache[mod];
+	}
 	/**
 	 * binomial coefficients nCk
 	 * @param n 
@@ -80,14 +100,14 @@ export default class ModInt {
 		const modint = (x: number) => new ModInt(x, m);
 
 		if (n.value <= 0 || k.value <= 0) return modint(1);
+		ModInt.cacheFactorial(n.value, m);
+
 		let result = modint(1);
-		for (let i = 1; i <= k.value; i++) {
-			result = result.mul(n.value - i + 1);
-			result = result.div(i);
-		}
+		result = result.mul(this.factorial_cache[m][n.value]);
+		result = result.div(this.factorial_cache[m][k.value]);
+		result = result.div(this.factorial_cache[m][n.value - k.value]);
 		return result;
 	}
-
 	/**
 	 * avoid overflow and calc x*y%mod
 	 * @param x non-negative int
@@ -104,7 +124,6 @@ export default class ModInt {
 		}
 		return multiplymod(x, y);
 	};
-
 	/**
 	 * get a maximum number z s.t. x%z==0 && x%z==0
 	 */
